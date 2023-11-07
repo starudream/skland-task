@@ -46,9 +46,18 @@ func RefreshToken(phone, token, cred string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("auth refresh error: %w", err)
 	}
+	token = res.Token
+
+	_, err = skland.GetUser(token, cred)
+	if err != nil {
+		if !skland.IsUnauthorized(err) {
+			return "", fmt.Errorf("get user error: %w", err)
+		}
+		return "", fmt.Errorf("need to login again, refresh token error: %w", err)
+	}
 
 	config.UpdateAccount(phone, func(account config.Account) config.Account {
-		account.Skland.Token = res.Token
+		account.Skland.Token = token
 		return account
 	})
 	err = config.Save()
@@ -56,7 +65,7 @@ func RefreshToken(phone, token, cred string) (string, error) {
 		return "", err
 	}
 
-	return res.Token, nil
+	return token, nil
 }
 
 func AttendGame(account config.Account, data *skland.ListPlayerData) map[string]map[string]string {
