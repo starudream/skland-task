@@ -21,9 +21,9 @@ var (
 		c.Use = "login"
 		c.Short = "Login account"
 		c.RunE = func(cmd *cobra.Command, args []string) error {
-			phone := util.Scan("please enter phone: ")
+			phone := util.Scan("please enter phone (use ctrl+c to exit): ")
 			if phone == "" {
-				return fmt.Errorf("phone is empty")
+				return nil
 			}
 
 			err := hypergryph.SendPhoneCode(phone)
@@ -31,9 +31,9 @@ var (
 				return fmt.Errorf("send phone code error: %w", err)
 			}
 
-			code := util.Scan("please enter the verification code you received: ")
+			code := util.Scan("please enter the verification code you received (use ctrl+c to exit): ")
 			if code == "" {
-				return fmt.Errorf("verification code is empty")
+				return nil
 			}
 
 			res1, err := hypergryph.LoginByPhoneCode(phone, code)
