@@ -70,8 +70,9 @@ skland-task notify send <message>
 ## Docker
 
 ```shell
-mkdir skland && cd skland
-touch app.yaml && docker run -it --rm -v $(pwd)/app.yaml:/app.yaml starudream/skland-task /skland-task account login
+mkdir skland && touch skland/app.yaml
+docker run -it --rm -v $(pwd)/skland:/skland starudream/skland-task /skland-task -c /skland/app.yaml account login
+docker run -it --rm -v $(pwd)/skland:/skland starudream/skland-task /skland-task -c /skland/app.yaml attend <account phone>
 ```
 
 ## Thanks
