@@ -6,8 +6,8 @@ import (
 	"github.com/starudream/go-lib/cobra/v2"
 
 	"github.com/starudream/skland-task/api/hypergryph"
-	"github.com/starudream/skland-task/api/skland"
 	"github.com/starudream/skland-task/config"
+	"github.com/starudream/skland-task/job"
 	"github.com/starudream/skland-task/util"
 )
 
@@ -41,27 +41,15 @@ var (
 				return fmt.Errorf("login by phone code error: %w", err)
 			}
 
-			res2, err := hypergryph.GrantApp(res1.Token, hypergryph.AppCodeSKLAND)
+			account, err := job.Login(res1.Token)
 			if err != nil {
-				return fmt.Errorf("grant app error: %w", err)
+				return err
 			}
 
-			res3, err := skland.AuthLoginByCode(res2.Code)
-			if err != nil {
-				return fmt.Errorf("auth login by code error: %w", err)
-			}
+			account.Phone = phone
+			account.Hypergryph.Token = res1.Token
 
-			config.AddAccount(config.Account{
-				Phone: phone,
-				Hypergryph: config.AccountHypergryph{
-					Token: res1.Token,
-					Code:  res2.Code,
-				},
-				Skland: config.AccountSkland{
-					Token: res3.Token,
-					Cred:  res3.Cred,
-				},
-			})
+			config.AddAccount(account)
 			return config.Save()
 		}
 	})

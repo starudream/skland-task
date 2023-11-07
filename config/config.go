@@ -31,8 +31,8 @@ type AccountHypergryph struct {
 }
 
 type AccountSkland struct {
-	Token string `json:"token" yaml:"token"`
 	Cred  string `json:"cred"  yaml:"cred"`
+	Token string `json:"token" yaml:"token"`
 }
 
 var (

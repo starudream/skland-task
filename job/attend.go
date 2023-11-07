@@ -14,7 +14,7 @@ import (
 )
 
 func Attend(account config.Account) (map[string]map[string]string, error) {
-	token, err := RefreshToken(account.Phone, account.Skland.Token, account.Skland.Cred)
+	token, err := RefreshToken(account)
 	if err != nil {
 		return nil, err
 	}
@@ -32,40 +32,40 @@ func Attend(account config.Account) (map[string]map[string]string, error) {
 	return AttendGame(account, res), nil
 }
 
-func RefreshToken(phone, token, cred string) (string, error) {
-	_, err := skland.GetUser(token, cred)
+func RefreshToken(account config.Account) (string, error) {
+	_, err := skland.GetUser(account.Skland.Token, account.Skland.Cred)
 	if err == nil {
-		return token, nil
+		return account.Skland.Token, nil
 	}
-
 	if !skland.IsUnauthorized(err) {
 		return "", fmt.Errorf("get user error: %w", err)
 	}
 
-	res, err := skland.AuthRefresh(cred)
+	res1, err := skland.AuthRefresh(account.Skland.Cred)
 	if err != nil {
 		return "", fmt.Errorf("auth refresh error: %w", err)
 	}
-	token = res.Token
+	account.Skland.Token = res1.Token
 
-	_, err = skland.GetUser(token, cred)
+	_, err = skland.GetUser(account.Skland.Token, account.Skland.Cred)
 	if err != nil {
 		if !skland.IsUnauthorized(err) {
 			return "", fmt.Errorf("get user error: %w", err)
 		}
-		return "", fmt.Errorf("need to login again, refresh token error: %w", err)
+
+		account, err = Login(account.Hypergryph.Token)
+		if err != nil {
+			return "", err
+		}
 	}
 
-	config.UpdateAccount(phone, func(account config.Account) config.Account {
-		account.Skland.Token = token
-		return account
-	})
+	config.UpdateAccount(account.Phone, func(config.Account) config.Account { return account })
 	err = config.Save()
 	if err != nil {
 		return "", err
 	}
 
-	return token, nil
+	return account.Skland.Token, nil
 }
 
 func AttendGame(account config.Account, data *skland.ListPlayerData) map[string]map[string]string {

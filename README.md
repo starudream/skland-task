@@ -14,7 +14,7 @@
 accounts:
   - phone: "手机号码"
     hypergryph:
-      token: "手机登录后的 token"
+      token: "手机登录后的 token，skland.cred 失效时需要使用该 token 重新登陆"
       code: "授权森空岛后的 code"
     skland:
       cred: "通过上方 hypergryph.code 获取到的凭证"
