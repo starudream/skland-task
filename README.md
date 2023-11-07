@@ -75,6 +75,26 @@ docker run -it --rm -v $(pwd)/skland:/skland -e DEBUG=true starudream/skland-tas
 docker run -it --rm -v $(pwd)/skland:/skland -e DEBUG=true starudream/skland-task /skland-task -c /skland/app.yaml attend <account phone>
 ```
 
+## Docker Compose
+
+```yaml
+version: "3"
+services:
+  skland:
+    image: starudream/skland-task
+    container_name: skland
+    restart: always
+    command: /skland-task -c /skland/app.yaml cron
+    volumes:
+      - "./skland/:/skland"
+    environment:
+      DEBUG: "true"
+      app.log.console.level: "info"
+      app.log.file.enabled: "true"
+      app.log.file.level: "debug"
+      app.log.file.filename: "/skland/app.log"
+```
+
 ## Thanks
 
 - [skland-sign-header](https://gitee.com/FancyCabbage/skyland-auto-sign#sign-header)
