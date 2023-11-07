@@ -3,11 +3,11 @@ module github.com/starudream/skland-task
 go 1.21
 
 require (
-	github.com/starudream/go-lib/cobra/v2 v2.0.0-rc.5
-	github.com/starudream/go-lib/core/v2 v2.0.0-rc.11
-	github.com/starudream/go-lib/cron/v2 v2.0.0-rc.2
-	github.com/starudream/go-lib/ntfy/v2 v2.0.0-rc.4
-	github.com/starudream/go-lib/resty/v2 v2.0.0-rc.7
+	github.com/starudream/go-lib/cobra/v2 v2.0.0
+	github.com/starudream/go-lib/core/v2 v2.0.1
+	github.com/starudream/go-lib/cron/v2 v2.0.0
+	github.com/starudream/go-lib/ntfy/v2 v2.0.0
+	github.com/starudream/go-lib/resty/v2 v2.0.0
 )
 
 require github.com/kr/pretty v0.3.1
