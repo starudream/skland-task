@@ -53,7 +53,15 @@ func C() Config {
 func AddAccount(account Account) {
 	_cMu.Lock()
 	defer _cMu.Unlock()
-	_c.Accounts = append(_c.Accounts, account)
+	u := false
+	for i := range _c.Accounts {
+		if _c.Accounts[i].Phone == account.Phone {
+			_c.Accounts[i], u = account, true
+		}
+	}
+	if !u {
+		_c.Accounts = append(_c.Accounts, account)
+	}
 }
 
 func UpdateAccount(phone string, cb func(account Account) Account) {
