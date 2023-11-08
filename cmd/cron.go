@@ -44,7 +44,7 @@ func cronAttendAccount(account config.Account) (msg string) {
 		msg = fmt.Sprintf("cron skland attend error: %v", err)
 		slog.Error(msg)
 	} else {
-		msg = account.Phone + "-" + job.FormatAwards(awards)
+		msg = account.Phone + " " + job.FormatAwards(awards)
 		slog.Info(msg)
 	}
 	err = ntfy.Notify(context.Background(), msg)

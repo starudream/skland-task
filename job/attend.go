@@ -151,9 +151,9 @@ func FormatAwards(awards map[string]map[string]string) string {
 		if game == "" {
 			game = "UNKNOWN"
 		}
-		buf.WriteString("[")
+		buf.WriteString("【")
 		buf.WriteString(game)
-		buf.WriteString("]\n")
+		buf.WriteString("】\n")
 		for name, award := range players {
 			buf.WriteString("  ")
 			buf.WriteString(name)
