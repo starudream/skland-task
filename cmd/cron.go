@@ -17,8 +17,11 @@ var cronCmd = cobra.NewCommand(func(c *cobra.Command) {
 	c.Use = "cron"
 	c.Short = "Run as cron job"
 	c.RunE = func(cmd *cobra.Command, args []string) error {
-		cronAttend()
-		err := cron.AddJob("0 0 9 * * *", "skland-attend", cronAttend)
+		cfg := config.C().CronAttend
+		if cfg.Startup {
+			cronAttend()
+		}
+		err := cron.AddJob(cfg.Spec, "skland-attend", cronAttend)
 		if err != nil {
 			return fmt.Errorf("add cron job error: %w", err)
 		}

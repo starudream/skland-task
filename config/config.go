@@ -3,10 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/kr/pretty"
 
@@ -16,7 +14,8 @@ import (
 )
 
 type Config struct {
-	Accounts []Account `json:"accounts" yaml:"accounts"`
+	Accounts   []Account `json:"accounts"    yaml:"accounts"`
+	CronAttend Cron      `json:"cron.attend" yaml:"cron.attend"`
 }
 
 type Account struct {
@@ -35,13 +34,24 @@ type AccountSkland struct {
 	Token string `json:"token" yaml:"token"`
 }
 
+type Cron struct {
+	Spec    string `json:"spec"    yaml:"spec"`
+	Startup bool   `json:"startup" yaml:"startup"`
+}
+
 var (
-	_c   = Config{}
+	_c = Config{
+		CronAttend: Cron{
+			Spec:    "0 0 9 * * *",
+			Startup: false,
+		},
+	}
 	_cMu = sync.Mutex{}
 )
 
 func init() {
 	_ = config.Unmarshal("", &_c)
+	config.LoadStruct(_c)
 }
 
 func C() Config {
@@ -71,7 +81,7 @@ func UpdateAccount(phone string, cb func(account Account) Account) {
 		if _c.Accounts[i].Phone == phone {
 			c := _c.Accounts[i]
 			nc := cb(c)
-			slog.Info("update account %s: %s", phone, strings.Join(pretty.Diff(c, nc), ", "))
+			slog.Info("update account %s, diff: %s", phone, strings.Join(pretty.Diff(c, nc), ", "))
 			_c.Accounts[i] = nc
 			return
 		}
@@ -89,24 +99,6 @@ func GetAccount(phone string) (Account, bool) {
 }
 
 func Save() error {
-	path := config.LoadedFile()
-	ext := filepath.Ext(path)
-	pre := path[:len(path)-len(ext)]
-	nn := pre + "." + time.Now().Format("20060102150405") + ext
-
-	_, err := os.Stat(path)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return fmt.Errorf("stat config file error: %w", err)
-		}
-	} else {
-		err = os.Rename(path, nn)
-		if err != nil {
-			return fmt.Errorf("rename config file error: %w", err)
-		}
-		slog.Info("backup config file to %s", nn)
-	}
-
 	config.LoadStruct(_c)
 
 	bs, err := yaml.Marshal(config.Raw())
@@ -114,7 +106,7 @@ func Save() error {
 		return fmt.Errorf("marshal config error: %w", err)
 	}
 
-	err = os.WriteFile(path, bs, 0644)
+	err = os.WriteFile(config.LoadedFile(), bs, 0644)
 	if err != nil {
 		return fmt.Errorf("write config file error: %w", err)
 	}

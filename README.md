@@ -19,6 +19,11 @@ accounts:
     skland:
       cred: "通过上方 hypergryph.code 获取到的凭证"
       token: "通过上方 hypergryph.code 获取到的 token，用于签名，会过期，需要手动 refresh"
+
+cron:
+  attend:
+    spec: "签到奖励执行时间，默认 0 0 9 * * * 即每天 09:00"
+    startup: "是否启动时执行一次，默认 false"
 ```
 
 ## Usage
