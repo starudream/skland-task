@@ -98,6 +98,7 @@ services:
       app.log.file.enabled: "true"
       app.log.file.level: "debug"
       app.log.file.filename: "/skland/app.log"
+      app.cron.attend.spec: "0 40 8 * * *"
 ```
 
 ## Thanks
