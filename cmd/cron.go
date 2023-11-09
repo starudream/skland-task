@@ -36,8 +36,8 @@ func init() {
 func cronRun() {
 	c := config.C()
 	for i := 0; i < len(c.Accounts); i++ {
-		cronCheckinAccount(c.Accounts[i])
-		cronAttendAccount(c.Accounts[i])
+		cronCheckinAccount(config.C().Accounts[i])
+		cronAttendAccount(config.C().Accounts[i])
 	}
 }
 
