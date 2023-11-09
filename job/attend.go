@@ -125,7 +125,7 @@ func FormatAwards(awards map[string]map[string]string) string {
 			if award != "" {
 				buf.WriteString(award)
 			} else {
-				buf.WriteString("FAIL")
+				buf.WriteString("失败")
 			}
 			buf.WriteString("\n")
 		}
