@@ -10,9 +10,9 @@ import (
 	"github.com/starudream/skland-task/job"
 )
 
-var attendCmd = cobra.NewCommand(func(c *cobra.Command) {
-	c.Use = "attend <account phone>"
-	c.Short = "Attend skland"
+var checkinCmd = cobra.NewCommand(func(c *cobra.Command) {
+	c.Use = "checkin <account phone>"
+	c.Short = "Checkin skland"
 	c.Args = func(cmd *cobra.Command, args []string) error {
 		phone, _ := sliceutil.GetValue(args, 0)
 		if phone == "" {
@@ -27,11 +27,10 @@ var attendCmd = cobra.NewCommand(func(c *cobra.Command) {
 	c.RunE = func(cmd *cobra.Command, args []string) error {
 		phone, _ := sliceutil.GetValue(args, 0)
 		account, _ := config.GetAccount(phone)
-		_, err := job.Attend(account)
-		return err
+		return job.Checkin("", account)
 	}
 })
 
 func init() {
-	rootCmd.AddCommand(attendCmd)
+	rootCmd.AddCommand(checkinCmd)
 }

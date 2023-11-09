@@ -4,10 +4,11 @@ go 1.21
 
 require (
 	github.com/starudream/go-lib/cobra/v2 v2.0.0
-	github.com/starudream/go-lib/core/v2 v2.0.1
+	github.com/starudream/go-lib/core/v2 v2.0.3
 	github.com/starudream/go-lib/cron/v2 v2.0.0
 	github.com/starudream/go-lib/ntfy/v2 v2.0.0
 	github.com/starudream/go-lib/resty/v2 v2.0.0
+	github.com/starudream/go-lib/tablew/v2 v2.0.2
 )
 
 require github.com/kr/pretty v0.3.1
@@ -24,9 +25,11 @@ require (
 	github.com/lmittmann/tint v1.0.3 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
+	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/samber/lo v1.38.1 // indirect

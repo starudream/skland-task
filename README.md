@@ -21,23 +21,21 @@ accounts:
       token: "通过上方 hypergryph.code 获取到的 token，用于签名，会过期，需要手动 refresh"
 
 cron:
-  attend:
-    spec: "签到奖励执行时间，默认 0 0 9 * * * 即每天 09:00"
-    startup: "是否启动时执行一次，默认 false"
+  spec: "签到奖励执行时间，默认 0 0 8 * * * 即每天 08:00:00"
+  startup: "是否启动时执行一次，默认 false"
 ```
 
 ## Usage
 
 ```
 > skland-task -h
-Usage of :
-  -c, --config string
 Usage:
   skland-task [command]
 
 Available Commands:
   account     Manage accounts
   attend      Attend skland
+  checkin     Checkin skland
   cron        Run as cron job
   notify      Manage notify
 
@@ -58,7 +56,14 @@ skland-task account list
 skland-task account login
 ```
 
-### Attend
+### Checkin `版区签到`
+
+```shell
+# manual checkin for input account phone
+skland-task checkin <account phone>
+```
+
+### Attend `福利签到`
 
 ```shell
 # manual attend for input account phone
@@ -98,7 +103,7 @@ services:
       app.log.file.enabled: "true"
       app.log.file.level: "debug"
       app.log.file.filename: "/skland/app.log"
-      app.cron.attend.spec: "0 40 8 * * *"
+      app.cron.spec: "0 40 8 * * *"
 ```
 
 ## Thanks

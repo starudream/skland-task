@@ -4,11 +4,12 @@ import (
 	"fmt"
 
 	"github.com/starudream/go-lib/cobra/v2"
+	"github.com/starudream/go-lib/core/v2/utils/fmtutil"
+	"github.com/starudream/go-lib/tablew/v2"
 
 	"github.com/starudream/skland-task/api/hypergryph"
 	"github.com/starudream/skland-task/config"
 	"github.com/starudream/skland-task/job"
-	"github.com/starudream/skland-task/util"
 )
 
 var (
@@ -21,7 +22,7 @@ var (
 		c.Use = "login"
 		c.Short = "Login account"
 		c.RunE = func(cmd *cobra.Command, args []string) error {
-			phone := util.Scan("please enter phone (use ctrl+c to exit): ")
+			phone := fmtutil.Scan("please enter phone (use ctrl+c to exit): ")
 			if phone == "" {
 				return nil
 			}
@@ -31,7 +32,7 @@ var (
 				return fmt.Errorf("send phone code error: %w", err)
 			}
 
-			code := util.Scan("please enter the verification code you received (use ctrl+c to exit): ")
+			code := fmtutil.Scan("please enter the verification code you received (use ctrl+c to exit): ")
 			if code == "" {
 				return nil
 			}
@@ -58,17 +59,7 @@ var (
 		c.Use = "list"
 		c.Short = "List accounts"
 		c.Run = func(cmd *cobra.Command, args []string) {
-			accounts := config.C().Accounts
-			lines := make([]string, len(accounts)+1)
-			lines[0] = "phone\thg-token\thg-code\tsk-token\tsk-cred"
-			for i, a := range accounts {
-				lines[i+1] = fmt.Sprintf("%s\t%s\t%s\t%s\t%s",
-					a.Phone,
-					a.Hypergryph.Token, a.Hypergryph.Code,
-					a.Skland.Token, a.Skland.Cred,
-				)
-			}
-			fmt.Println(util.TabWriter(lines...))
+			fmt.Println(tablew.Structs(config.C().Accounts))
 		}
 	})
 )

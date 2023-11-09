@@ -17,11 +17,10 @@ var cronCmd = cobra.NewCommand(func(c *cobra.Command) {
 	c.Use = "cron"
 	c.Short = "Run as cron job"
 	c.RunE = func(cmd *cobra.Command, args []string) error {
-		cfg := config.C().CronAttend
-		if cfg.Startup {
-			cronAttend()
+		if config.C().Cron.Startup {
+			cronRun()
 		}
-		err := cron.AddJob(cfg.Spec, "skland-attend", cronAttend)
+		err := cron.AddJob(config.C().Cron.Spec, "skland-cron", cronRun)
 		if err != nil {
 			return fmt.Errorf("add cron job error: %w", err)
 		}
@@ -34,17 +33,34 @@ func init() {
 	rootCmd.AddCommand(cronCmd)
 }
 
-func cronAttend() {
-	accounts := config.C().Accounts
-	for i := 0; i < len(accounts); i++ {
-		cronAttendAccount(accounts[i])
+func cronRun() {
+	c := config.C()
+	for i := 0; i < len(c.Accounts); i++ {
+		cronCheckinAccount(c.Accounts[i])
+		cronAttendAccount(c.Accounts[i])
 	}
+}
+
+func cronCheckinAccount(account config.Account) (msg string) {
+	err := job.Checkin("", account)
+	if err != nil {
+		msg = fmt.Sprintf("森空岛版区签到失败: %v", err)
+		slog.Error(msg)
+	} else {
+		msg = account.Phone + " 森空岛版区签到成功"
+		slog.Info(msg)
+	}
+	err = ntfy.Notify(context.Background(), msg)
+	if err != nil {
+		slog.Error("cron skland notify error: %v", err)
+	}
+	return
 }
 
 func cronAttendAccount(account config.Account) (msg string) {
 	awards, err := job.Attend(account)
 	if err != nil {
-		msg = fmt.Sprintf("cron skland attend error: %v", err)
+		msg = fmt.Sprintf("森空岛福利签到失败: %v", err)
 		slog.Error(msg)
 	} else {
 		msg = account.Phone + " " + job.FormatAwards(awards)

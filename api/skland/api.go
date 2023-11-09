@@ -47,12 +47,34 @@ type BaseResp[T any] struct {
 	Data    T      `json:"data,omitempty"`
 }
 
+func (t *BaseResp[T]) GetCodeMsg() (int, string) {
+	if t == nil || t.Code == nil {
+		return 999999, t.Message
+	}
+	return *t.Code, t.Message
+}
+
 func (t *BaseResp[T]) IsSuccess() bool {
 	return t != nil && t.Code != nil && *t.Code == 0
 }
 
 func (t *BaseResp[T]) String() string {
 	return fmt.Sprintf("code: %d, message: %s", *t.Code, t.Message)
+}
+
+func IsCode(err error, code int, msg string) bool {
+	if err == nil {
+		return false
+	}
+	e, ok1 := resty.AsRespErr(err)
+	if ok1 {
+		t, ok2 := e.Result().(interface{ GetCodeMsg() (int, string) })
+		if ok2 {
+			c, m := t.GetCodeMsg()
+			return c == code && (msg == "" || m == msg)
+		}
+	}
+	return false
 }
 
 func R() *resty.Request {

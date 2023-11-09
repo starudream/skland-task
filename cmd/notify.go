@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/starudream/go-lib/cobra/v2"
+	"github.com/starudream/go-lib/core/v2/utils/sliceutil"
 	"github.com/starudream/go-lib/ntfy/v2"
 )
 
@@ -17,10 +18,8 @@ var (
 		c.Use = "send <message>"
 		c.Short = "Send notify"
 		c.RunE = func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 || args[0] == "" {
-				args = []string{"Hello World!"}
-			}
-			return ntfy.Notify(context.Background(), args[0])
+			msg, _ := sliceutil.GetValue(args, 0, "Hello World")
+			return ntfy.Notify(context.Background(), msg)
 		}
 	})
 )
