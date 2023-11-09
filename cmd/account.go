@@ -62,7 +62,6 @@ var (
 			lines := make([]string, len(accounts)+1)
 			lines[0] = "phone\thg-token\thg-code\tsk-token\tsk-cred"
 			for i, a := range accounts {
-				fmt.Printf("%#v\n", a)
 				lines[i+1] = fmt.Sprintf("%s\t%s\t%s\t%s\t%s",
 					a.Phone,
 					a.Hypergryph.Token, a.Hypergryph.Code,
