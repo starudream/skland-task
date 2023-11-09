@@ -19,6 +19,8 @@ func Checkin(gid string, account config.Account) error {
 
 	account.Skland.Token = token
 
+	slog.Info("attempt to check in")
+
 	err = skland.Checkin(account.Skland.Token, account.Skland.Cred, gid)
 	if err != nil {
 		if skland.IsCode(err, 10001, "重复签到") {
