@@ -51,6 +51,9 @@ var (
 
 func init() {
 	_ = config.Unmarshal("", &_c)
+
+	_ = config.Unmarshal("cron.attend", &_c.CronAttend)
+
 	config.LoadStruct(_c)
 }
 
