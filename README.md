@@ -36,6 +36,7 @@ Available Commands:
   account     Manage accounts
   attend      Attend skland
   checkin     Checkin skland
+  config      Manage config
   cron        Run as cron job
   notify      Manage notify
 
@@ -68,6 +69,13 @@ skland-task checkin <account phone>
 ```shell
 # manual attend for input account phone
 skland-task attend <account phone>
+```
+
+### Config
+
+```shell
+# write config to file
+miyoushe-task config save
 ```
 
 ### Notify
