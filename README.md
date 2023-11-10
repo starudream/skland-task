@@ -111,7 +111,8 @@ services:
       app.log.file.enabled: "true"
       app.log.file.level: "debug"
       app.log.file.filename: "/skland/app.log"
-      app.cron.spec: "0 40 8 * * *"
+      app.ntfy.weixin_work.key: "foo"
+      app.cron.spec: "0 30 8 * * *"
 ```
 
 ## Thanks
