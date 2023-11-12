@@ -42,12 +42,12 @@ func cronRun() {
 }
 
 func cronCheckinAccount(account config.Account) (msg string) {
-	err := job.Checkin("", account)
+	data, err := job.Checkin(account)
 	if err != nil {
 		msg = fmt.Sprintf("森空岛版区签到失败: %v", err)
 		slog.Error(msg)
 	} else {
-		msg = account.Phone + " 森空岛版区签到成功"
+		msg = account.Phone + "\n" + job.FormatCheckin(data)
 		slog.Info(msg)
 	}
 	err = ntfy.Notify(context.Background(), msg)

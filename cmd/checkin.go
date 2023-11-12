@@ -27,7 +27,8 @@ var checkinCmd = cobra.NewCommand(func(c *cobra.Command) {
 	c.RunE = func(cmd *cobra.Command, args []string) error {
 		phone, _ := sliceutil.GetValue(args, 0)
 		account, _ := config.GetAccount(phone)
-		return job.Checkin("", account)
+		_, err := job.Checkin(account)
+		return err
 	}
 })
 
