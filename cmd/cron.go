@@ -37,6 +37,7 @@ func cronRun() {
 	c := config.C()
 	for i := 0; i < len(c.Accounts); i++ {
 		cronCheckinAccount(config.C().Accounts[i])
+		cronPostAccount(config.C().Accounts[i])
 		cronAttendAccount(config.C().Accounts[i])
 	}
 }
@@ -48,6 +49,22 @@ func cronCheckinAccount(account config.Account) (msg string) {
 		slog.Error(msg)
 	} else {
 		msg = account.Phone + "\n" + job.FormatCheckin(data)
+		slog.Info(msg)
+	}
+	err = ntfy.Notify(context.Background(), msg)
+	if err != nil {
+		slog.Error("cron skland notify error: %v", err)
+	}
+	return
+}
+
+func cronPostAccount(account config.Account) (msg string) {
+	err := job.Post(account)
+	if err != nil {
+		msg = fmt.Sprintf("森空岛版区等级任务失败: %v", err)
+		slog.Error(msg)
+	} else {
+		msg = account.Phone + "\n" + "森空岛版区等级任务成功"
 		slog.Info(msg)
 	}
 	err = ntfy.Notify(context.Background(), msg)

@@ -25,7 +25,7 @@ type Cron struct {
 var (
 	_c = Config{
 		Cron: Cron{
-			Spec:    "0 0 8 * * *",
+			Spec:    "5 4 8 * * *",
 			Startup: false,
 		},
 	}

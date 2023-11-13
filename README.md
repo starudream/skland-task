@@ -21,7 +21,7 @@ accounts:
       token: "通过上方 hypergryph.code 获取到的 token，用于签名，会过期，需要手动 refresh"
 
 cron:
-  spec: "签到奖励执行时间，默认 0 0 8 * * * 即每天 08:00:00"
+  spec: "签到奖励执行时间，默认 5 4 8 * * * 即每天 08:04:05"
   startup: "是否启动时执行一次，默认 false"
 ```
 
@@ -39,6 +39,7 @@ Available Commands:
   config      Manage config
   cron        Run as cron job
   notify      Manage notify
+  post        Post skland
 
 Flags:
   -c, --config string   path to config file
@@ -62,6 +63,13 @@ skland-task account login
 ```shell
 # manual checkin for input account phone
 skland-task checkin <account phone>
+```
+
+### Post `版区帖子`
+
+```shell
+# manual post for input account phone
+skland-task post <account phone>
 ```
 
 ### Attend `福利签到`
@@ -112,7 +120,7 @@ services:
       app.log.file.level: "debug"
       app.log.file.filename: "/skland/app.log"
       app.ntfy.weixin_work.key: "foo"
-      app.cron.spec: "0 30 8 * * *"
+      app.cron.spec: "5 4 8 * * *"
 ```
 
 ## Thanks

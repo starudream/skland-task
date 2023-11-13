@@ -17,9 +17,9 @@ import (
 
 const (
 	Addr      = "https://zonai.skland.com"
-	UserAgent = "Skland/1.1.0 (com.hypergryph.skland; build:100100047; Android 33; ) Okhttp/4.11.0"
+	UserAgent = "Skland/1.4.1 (com.hypergryph.skland; build:100401001; Android 33; ) Okhttp/4.11.0"
 	Platform  = "1"
-	VName     = "1.1.0"
+	VName     = "1.4.1"
 	DId       = "743a446c83032899"
 
 	GameCodeArknights = "1" // 明日方舟
