@@ -4,10 +4,11 @@ import (
 	"testing"
 
 	"github.com/starudream/go-lib/core/v2/utils/testutil"
+
+	"github.com/starudream/skland-task/config"
 )
 
 func TestGetUser(t *testing.T) {
-	account := GetAccount(t)
-	data, err := GetUser(account.Skland.Token, account.Skland.Cred)
+	data, err := GetUser(config.C().FirstAccount().Skland)
 	testutil.LogNoErr(t, err, data)
 }

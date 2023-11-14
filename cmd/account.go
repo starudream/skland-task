@@ -37,18 +37,18 @@ var (
 				return nil
 			}
 
-			res1, err := hypergryph.LoginByPhoneCode(phone, code)
+			res, err := hypergryph.LoginByPhoneCode(phone, code)
 			if err != nil {
 				return fmt.Errorf("login by phone code error: %w", err)
 			}
 
-			account, err := job.Login(res1.Token)
+			account, err := job.Login(res.Token)
 			if err != nil {
 				return err
 			}
 
 			account.Phone = phone
-			account.Hypergryph.Token = res1.Token
+			account.Hypergryph.Token = res.Token
 
 			config.AddAccount(account)
 			return config.Save()

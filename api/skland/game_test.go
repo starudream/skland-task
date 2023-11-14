@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/starudream/go-lib/core/v2/utils/testutil"
+
+	"github.com/starudream/skland-task/config"
 )
 
 func TestListGame(t *testing.T) {
@@ -12,13 +14,11 @@ func TestListGame(t *testing.T) {
 }
 
 func TestListPlayer(t *testing.T) {
-	account := GetAccount(t)
-	data, err := ListPlayer(account.Skland.Token, account.Skland.Cred)
+	data, err := ListPlayer(config.C().FirstAccount().Skland)
 	testutil.LogNoErr(t, err, data)
 }
 
 func TestSwitchPlayer(t *testing.T) {
-	account, player := GetPlayer(t)
-	err := SwitchPlayer(account.Skland.Token, account.Skland.Cred, GameCodeArknights, player.Uid)
+	err := SwitchPlayer(GameCodeArknights, PlayerUid, config.C().FirstAccount().Skland)
 	testutil.LogNoErr(t, err)
 }

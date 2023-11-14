@@ -9,5 +9,6 @@ type User struct {
 }
 
 func GetUser(token string) (*User, error) {
-	return Exec[*User](R().SetQueryParam("token", token), "GET", "/user/info/v1/basic")
+	req := R().SetQueryParam("token", token)
+	return Exec[*User](req, "GET", "/user/info/v1/basic")
 }

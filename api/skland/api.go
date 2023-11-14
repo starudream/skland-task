@@ -13,13 +13,15 @@ import (
 	"github.com/starudream/go-lib/core/v2/codec/json"
 	"github.com/starudream/go-lib/core/v2/utils/structutil"
 	"github.com/starudream/go-lib/resty/v2"
+
+	"github.com/starudream/skland-task/config"
 )
 
 const (
 	Addr      = "https://zonai.skland.com"
-	UserAgent = "Skland/1.4.1 (com.hypergryph.skland; build:100401001; Android 33; ) Okhttp/4.11.0"
+	UserAgent = "Skland/1.5.1 (com.hypergryph.skland; build:100501001; Android 33; ) Okhttp/4.11.0"
 	Platform  = "1"
-	VName     = "1.4.1"
+	VName     = "1.5.1"
 	DId       = "743a446c83032899"
 
 	GameCodeArknights = "1" // 明日方舟
@@ -28,18 +30,10 @@ const (
 	GameCodePopucom   = "4" // 泡姆泡姆
 
 	GameAppCodeArknights = "arknights"
-)
 
-var (
-	GameCodeByAppCode = map[string]string{
-		GameAppCodeArknights: GameCodeArknights,
-	}
-	GameNameByAppCode = map[string]string{
-		GameAppCodeArknights: "明日方舟",
-	}
+	MessageForumHasSigned = "重复签到"
+	MessageGameHasSigned  = "请勿重复签到！"
 )
-
-type M map[string]any
 
 type BaseResp[T any] struct {
 	Code    *int   `json:"code"`
@@ -47,11 +41,11 @@ type BaseResp[T any] struct {
 	Data    T      `json:"data,omitempty"`
 }
 
-func (t *BaseResp[T]) GetCodeMsg() (int, string) {
-	if t == nil || t.Code == nil {
-		return 999999, t.Message
+func (t *BaseResp[T]) GetMessage() string {
+	if t == nil {
+		return ""
 	}
-	return *t.Code, t.Message
+	return t.Message
 }
 
 func (t *BaseResp[T]) IsSuccess() bool {
@@ -62,17 +56,23 @@ func (t *BaseResp[T]) String() string {
 	return fmt.Sprintf("code: %d, message: %s", *t.Code, t.Message)
 }
 
-func IsCode(err error, code int, msg string) bool {
+func IsMessage(err error, msg string) bool {
 	if err == nil {
 		return false
 	}
 	e, ok1 := resty.AsRespErr(err)
 	if ok1 {
-		t, ok2 := e.Result().(interface{ GetCodeMsg() (int, string) })
-		if ok2 {
-			c, m := t.GetCodeMsg()
-			return c == code && (msg == "" || m == msg)
-		}
+		t1, ok2 := e.Response.Error().(interface{ GetMessage() string })
+		t2, ok3 := e.Response.Result().(interface{ GetMessage() string })
+		return (ok2 && t1.GetMessage() == msg) || (ok3 && t2.GetMessage() == msg)
+	}
+	return false
+}
+
+func IsUnauthorized(err error) bool {
+	re, ok := resty.AsRespErr(err)
+	if ok {
+		return re.StatusCode() == 401
 	}
 	return false
 }
@@ -81,9 +81,12 @@ func R() *resty.Request {
 	return resty.R().SetHeader("User-Agent", UserAgent).SetHeader("Accept-Encoding", "gzip")
 }
 
-func Exec[T any](r *resty.Request, method, path string, token ...string) (t T, _ error) {
-	if len(token) > 0 && token[0] != "" {
-		AddSign(r, method, path, token[0])
+func Exec[T any](r *resty.Request, method, path string, vs ...any) (t T, _ error) {
+	for i := 0; i < len(vs); i++ {
+		switch v := vs[i].(type) {
+		case config.AccountSkland:
+			AddSign(r, method, path, v)
+		}
 	}
 	res, err := resty.ParseResp[*BaseResp[any], *BaseResp[T]](
 		r.SetError(&BaseResp[any]{}).SetResult(&BaseResp[T]{}).Execute(method, Addr+path),
@@ -101,7 +104,7 @@ type signHeaders struct {
 	VName     string `json:"vName"`
 }
 
-func AddSign(r *resty.Request, method, path, token string) {
+func AddSign(r *resty.Request, method, path string, skland config.AccountSkland) {
 	ts := strconv.FormatInt(time.Now().Unix(), 10)
 
 	// use struct to fix the order of headers
@@ -109,8 +112,9 @@ func AddSign(r *resty.Request, method, path, token string) {
 
 	r.SetHeaders(tom(headers))
 
-	_, signature := sign(headers, method, path, token, r.QueryParam, r.Body)
+	_, signature := sign(headers, method, path, skland.Token, r.QueryParam, r.Body)
 
+	r.SetHeader("cred", skland.Cred)
 	r.SetHeader("sign", signature)
 }
 
@@ -144,12 +148,4 @@ func hmac256(key, content string) []byte {
 	h := hmac.New(sha256.New, []byte(key))
 	h.Write([]byte(content))
 	return h.Sum(nil)
-}
-
-func IsUnauthorized(err error) bool {
-	re, ok := resty.AsRespErr(err)
-	if ok {
-		return re.StatusCode() == 401
-	}
-	return false
 }

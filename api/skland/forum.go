@@ -1,36 +1,35 @@
 package skland
 
 import (
-	"fmt"
-	"strconv"
-
 	"github.com/starudream/go-lib/core/v2/gh"
+
+	"github.com/starudream/skland-task/config"
 )
 
 type ListPostData struct {
-	HasMore   bool    `json:"hasMore"`
-	PageSize  int     `json:"pageSize"`
-	PageToken string  `json:"pageToken"`
-	List      []*Post `json:"list"`
+	HasMore   bool        `json:"hasMore"`
+	PageSize  int         `json:"pageSize"`
+	PageToken string      `json:"pageToken"`
+	List      []*PostData `json:"list"`
 }
 
-type Post struct {
-	Item    *PostItem    `json:"item"`
-	ItemRel *PostItemRel `json:"itemRel"`
-	ItemRts *PostItemRts `json:"itemRts"`
+type PostData struct {
+	Item    *PostInfo    `json:"item"`
+	ItemRel *PostRel     `json:"itemRel"`
+	ItemRts *PostRts     `json:"itemRts"`
 	User    *PostUser    `json:"user"`
 	UserRel *PostUserRel `json:"userRel"`
 }
 
-func (p *Post) IsLiked() bool {
+func (p *PostData) IsLiked() bool {
 	return p != nil && p.ItemRel != nil && p.ItemRel.Like
 }
 
-func (p *Post) IsCollected() bool {
+func (p *PostData) IsCollected() bool {
 	return p != nil && p.ItemRel != nil && p.ItemRel.Collect
 }
 
-type PostItem struct {
+type PostInfo struct {
 	Id               string `json:"id"`
 	UserId           string `json:"userId"`
 	GameId           int    `json:"gameId"`
@@ -46,12 +45,12 @@ type PostItem struct {
 	LatestIpLocation string `json:"latestIpLocation"`
 }
 
-type PostItemRel struct {
+type PostRel struct {
 	Collect bool `json:"collect"`
 	Like    bool `json:"like"`
 }
 
-type PostItemRts struct {
+type PostRts struct {
 	Collected string `json:"collected"`
 	Commented string `json:"commented"`
 	Liked     string `json:"liked"`
@@ -77,45 +76,42 @@ type PostUserRel struct {
 	Follow   bool `json:"follow"`
 }
 
-func ListPost(token, cred, gameId, pageToken string) (*ListPostData, error) {
-	query := gh.MS{"gameId": gameId, "cateId": "2", "sortType": "4", "pageToken": pageToken, "pageSize": "10"}
-	return Exec[*ListPostData](R().SetHeader("cred", cred).SetQueryParams(query), "GET", "/api/v1/home/index", token)
+func ListPost(gameId, cateId, pageToken string, skland config.AccountSkland) (*ListPostData, error) {
+	req := R().SetQueryParams(gh.MS{"gameId": gameId, "cateId": cateId, "sortType": "4", "pageToken": pageToken, "pageSize": "10"})
+	return Exec[*ListPostData](req, "GET", "/api/v1/home/index", skland)
 }
 
 type GetPostData struct {
-	List []*Post `json:"list"`
+	List []*PostData `json:"list"`
 }
 
-func (v *GetPostData) Get() *Post {
+func (v *GetPostData) Get() *PostData {
 	if v == nil || len(v.List) == 0 {
 		return nil
 	}
 	return v.List[0]
 }
 
-func GetPost(token, cred, postId string) (*Post, error) {
-	data, err := Exec[*GetPostData](R().SetHeader("cred", cred).SetQueryParam("ids", postId), "GET", "/api/v1/item/list", token)
+func GetPost(postId string, skland config.AccountSkland) (*PostData, error) {
+	req := R().SetQueryParam("ids", postId)
+	data, err := Exec[*GetPostData](req, "GET", "/api/v1/item/list", skland)
 	return data.Get(), err
 }
 
 const (
-	ActionLike = 12
+	ActionLike    = 12
+	ActionCollect = 21
 )
 
-func LikePost(token, cred, postId string) error {
-	pid, err := strconv.ParseInt(postId, 10, 64)
-	if err != nil {
-		return fmt.Errorf("parse post id error: %w", err)
-	}
-	_, err = Exec[any](R().SetHeader("cred", cred).SetBody(gh.M{"objectId": pid, "action": ActionLike}), "POST", "/api/v1/action/trigger", token)
+func ActionPost(postId string, action int, cancel bool, skland config.AccountSkland) error {
+	url := gh.Ternary(cancel, "/api/v1/action/cancel", "/api/v1/action/trigger")
+	req := R().SetBody(gh.M{"objectId": atoi(postId), "action": action})
+	_, err := Exec[any](req, "POST", url, skland)
 	return err
 }
 
-func SharePost(token, cred, gameId string) error {
-	gid, err := strconv.ParseInt(gameId, 10, 64)
-	if err != nil {
-		return fmt.Errorf("parse post id error: %w", err)
-	}
-	_, err = Exec[any](R().SetHeader("cred", cred).SetBody(gh.M{"gameId": gid}), "POST", "/api/v1/score/share", token)
+func SharePost(gameId string, skland config.AccountSkland) error {
+	req := R().SetBody(gh.M{"gameId": atoi(gameId)})
+	_, err := Exec[any](req, "POST", "/api/v1/score/share", skland)
 	return err
 }

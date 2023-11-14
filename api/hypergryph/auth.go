@@ -1,7 +1,12 @@
 package hypergryph
 
+import (
+	"github.com/starudream/go-lib/core/v2/gh"
+)
+
 func SendPhoneCode(phone string) error {
-	_, err := Exec[any](R().SetBody(M{"type": 2, "phone": phone}), "POST", "/general/v1/send_phone_code")
+	req := R().SetBody(gh.M{"type": 2, "phone": phone})
+	_, err := Exec[any](req, "POST", "/general/v1/send_phone_code")
 	return err
 }
 
@@ -10,7 +15,8 @@ type LoginByPhoneCodeData struct {
 }
 
 func LoginByPhoneCode(phone, code string) (*LoginByPhoneCodeData, error) {
-	return Exec[*LoginByPhoneCodeData](R().SetBody(M{"phone": phone, "code": code}), "POST", "/user/auth/v2/token_by_phone_code")
+	req := R().SetBody(gh.M{"phone": phone, "code": code})
+	return Exec[*LoginByPhoneCodeData](req, "POST", "/user/auth/v2/token_by_phone_code")
 }
 
 type GrantAppData struct {
@@ -19,5 +25,6 @@ type GrantAppData struct {
 }
 
 func GrantApp(token string, code string) (*GrantAppData, error) {
-	return Exec[*GrantAppData](R().SetBody(M{"type": 0, "token": token, "appCode": code}), "POST", "/user/oauth2/v2/grant")
+	req := R().SetBody(gh.M{"type": 0, "token": token, "appCode": code})
+	return Exec[*GrantAppData](req, "POST", "/user/oauth2/v2/grant")
 }

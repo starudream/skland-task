@@ -9,5 +9,6 @@ type AppInfo struct {
 }
 
 func GetAppConfig(code string) (*AppConfig, error) {
-	return Exec[*AppConfig](R().SetQueryParam("appCode", code), "GET", "/app/v1/config")
+	req := R().SetQueryParam("appCode", code)
+	return Exec[*AppConfig](req, "GET", "/app/v1/config")
 }

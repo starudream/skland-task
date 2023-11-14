@@ -13,8 +13,6 @@ const (
 	AppCodeSKLAND = "4ca99fa6b56cc2ba"
 )
 
-type M map[string]any
-
 type BaseResp[T any] struct {
 	StatusCode *int   `json:"statusCode"`
 	Error      string `json:"error"`
@@ -23,7 +21,8 @@ type BaseResp[T any] struct {
 	Status *int   `json:"status"`
 	Type   string `json:"type"`
 	Msg    string `json:"msg"`
-	Data   T      `json:"data,omitempty"`
+
+	Data T `json:"data,omitempty"`
 }
 
 func (t *BaseResp[T]) IsSuccess() bool {
@@ -31,12 +30,9 @@ func (t *BaseResp[T]) IsSuccess() bool {
 }
 
 func (t *BaseResp[T]) String() string {
-	if t == nil {
-		return "<nil>"
-	}
-	if t.StatusCode != nil {
+	if t != nil && t.StatusCode != nil {
 		return fmt.Sprintf("status: %d, error: %s, message: %s", *t.StatusCode, t.Error, t.Message)
-	} else if t.Status != nil {
+	} else if t != nil && t.Status != nil {
 		return fmt.Sprintf("status: %d, type: %s, msg: %s", *t.Status, t.Type, t.Msg)
 	}
 	return "<nil>"

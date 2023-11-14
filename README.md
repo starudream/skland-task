@@ -34,12 +34,10 @@ Usage:
 
 Available Commands:
   account     Manage accounts
-  attend      Attend skland
-  checkin     Checkin skland
   config      Manage config
   cron        Run as cron job
   notify      Manage notify
-  post        Post skland
+  sign        Run sign task
 
 Flags:
   -c, --config string   path to config file
@@ -58,39 +56,22 @@ skland-task account list
 skland-task account login
 ```
 
-### Checkin `版区签到`
+### SignForum `森空岛每日任务`
 
 ```shell
-# manual checkin for input account phone
-skland-task checkin <account phone>
+miyoushe-task sign forum <account phone>
 ```
 
-### Post `版区帖子`
+### SignGame `森空岛游戏签到`
 
 ```shell
-# manual post for input account phone
-skland-task post <account phone>
+miyoushe-task sign game <account phone>
 ```
 
-### Attend `福利签到`
+### Cron
 
 ```shell
-# manual attend for input account phone
-skland-task attend <account phone>
-```
-
-### Config
-
-```shell
-# write config to file
-miyoushe-task config save
-```
-
-### Notify
-
-```shell
-# test notify
-skland-task notify send <message>
+miyoushe-task cron
 ```
 
 ## Docker
@@ -98,7 +79,7 @@ skland-task notify send <message>
 ```shell
 mkdir skland && touch skland/app.yaml
 docker run -it --rm -v $(pwd)/skland:/skland -e DEBUG=true starudream/skland-task /skland-task -c /skland/app.yaml account login
-docker run -it --rm -v $(pwd)/skland:/skland -e DEBUG=true starudream/skland-task /skland-task -c /skland/app.yaml attend <account phone>
+docker run -it --rm -v $(pwd)/skland:/skland -e DEBUG=true starudream/skland-task /skland-task -c /skland/app.yaml sign game <account phone>
 ```
 
 ## Docker Compose

@@ -4,31 +4,9 @@ import (
 	"testing"
 
 	"github.com/starudream/go-lib/core/v2/utils/testutil"
-
-	"github.com/starudream/skland-task/config"
 )
 
-func GetAccount(t *testing.T) config.Account {
-	accounts := config.C().Accounts
-	if len(accounts) == 0 {
-		t.SkipNow()
-	}
-	account := accounts[0]
-	testutil.Log(t, account)
-	return account
-}
-
-func GetPlayer(t *testing.T) (config.Account, *Player) {
-	account := GetAccount(t)
-	players, err := ListPlayer(account.Skland.Token, account.Skland.Cred)
-	testutil.LogNoErr(t, err, players)
-	if len(players.List) == 0 || len(players.List[0].BindingList) == 0 {
-		t.SkipNow()
-	}
-	player := players.List[0].BindingList[0]
-	testutil.Log(t, player)
-	return account, player
-}
+const PlayerUid = ""
 
 func TestSign(t *testing.T) {
 	headers := signHeaders{

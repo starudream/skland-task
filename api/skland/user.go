@@ -1,5 +1,9 @@
 package skland
 
+import (
+	"github.com/starudream/skland-task/config"
+)
+
 type User struct {
 	User *UserInfo `json:"user"`
 }
@@ -9,6 +13,6 @@ type UserInfo struct {
 	Nickname string `json:"nickname"`
 }
 
-func GetUser(token, cred string) (*User, error) {
-	return Exec[*User](R().SetHeader("cred", cred), "GET", "/api/v1/user", token)
+func GetUser(skland config.AccountSkland) (*User, error) {
+	return Exec[*User](R(), "GET", "/api/v1/user", skland)
 }

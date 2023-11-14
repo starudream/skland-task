@@ -1,5 +1,9 @@
 package skland
 
+import (
+	"github.com/starudream/go-lib/core/v2/gh"
+)
+
 type GenCredByCodeData struct {
 	UserId string `json:"userId"`
 	Cred   string `json:"cred"`
@@ -7,7 +11,8 @@ type GenCredByCodeData struct {
 }
 
 func AuthLoginByCode(code string) (*GenCredByCodeData, error) {
-	return Exec[*GenCredByCodeData](R().SetBody(M{"kind": 1, "code": code}), "POST", "/api/v1/user/auth/generate_cred_by_code")
+	req := R().SetBody(gh.M{"kind": 1, "code": code})
+	return Exec[*GenCredByCodeData](req, "POST", "/api/v1/user/auth/generate_cred_by_code")
 }
 
 type AuthRefreshData struct {
@@ -15,5 +20,6 @@ type AuthRefreshData struct {
 }
 
 func AuthRefresh(cred string) (*AuthRefreshData, error) {
-	return Exec[*AuthRefreshData](R().SetHeader("cred", cred), "GET", "/api/v1/auth/refresh")
+	req := R().SetHeader("cred", cred)
+	return Exec[*AuthRefreshData](req, "GET", "/api/v1/auth/refresh")
 }
