@@ -24,10 +24,11 @@ const (
 	VName     = "1.5.1"
 	DId       = "743a446c83032899"
 
-	GameCodeArknights = "1" // 明日方舟
-	GameCodeExastris  = "2" // 来自星尘
-	GameCodeEndfleld  = "3" // 终末地
-	GameCodePopucom   = "4" // 泡姆泡姆
+	GameCodeArknights = "1"   // 明日方舟
+	GameCodeExastris  = "2"   // 来自星尘
+	GameCodeEndfleld  = "3"   // 终末地
+	GameCodePopucom   = "4"   // 泡姆泡姆
+	GameCodeNest      = "100" // 纳斯特港
 
 	GameAppCodeArknights = "arknights"
 
