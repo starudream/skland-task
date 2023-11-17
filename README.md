@@ -8,7 +8,7 @@
 
 - `global` [doc](https://github.com/starudream/go-lib/blob/v2/README.md) - [example](https://github.com/starudream/go-lib/blob/v2/app.example.yaml)
 
-以下参数无需手动增加，可通过下方 [Account Manager](#account) 通过发送验证码自动获取
+以下参数无需手动增加，可通过下方 [Account](#account) 发送验证码自动获取
 
 ```yaml
 accounts:
