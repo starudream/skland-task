@@ -37,6 +37,7 @@ Available Commands:
   config      Manage config
   cron        Run as cron job
   notify      Manage notify
+  service     Manage service
   sign        Run sign task
 
 Flags:
