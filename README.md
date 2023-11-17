@@ -59,19 +59,28 @@ skland-task account login
 ### SignForum `森空岛每日任务`
 
 ```shell
-miyoushe-task sign forum <account phone>
+skland-task sign forum <account phone>
 ```
 
 ### SignGame `森空岛游戏签到`
 
 ```shell
-miyoushe-task sign game <account phone>
+skland-task sign game <account phone>
 ```
 
 ### Cron
 
 ```shell
-miyoushe-task cron
+skland-task cron
+```
+
+### Service
+
+```shell
+# register as system service
+skland-task service --user --config skland-task.yaml install
+skland-task service start
+skland-task service status
 ```
 
 ## Docker
