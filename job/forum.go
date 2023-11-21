@@ -18,7 +18,7 @@ const (
 	PostView  = 5
 	PostLike  = 10
 	PostShare = 1
-	PostLoop  = 5
+	PostLoop  = 10
 )
 
 type SignForumRecord struct {
@@ -135,7 +135,7 @@ post:
 		if record.PostView < PostView {
 			_, e := skland.GetPost(pid, account.Skland)
 			if e != nil {
-				slog.Error("get post error: %w", e)
+				slog.Error("get post error: %v", e)
 				continue
 			}
 			record.PostView++
@@ -143,7 +143,7 @@ post:
 		if record.PostLike < PostLike && !p.IsLiked() {
 			e := skland.ActionPost(pid, skland.ActionLike, false, account.Skland)
 			if e != nil {
-				slog.Error("like post error: %w", e)
+				slog.Error("like post error: %v", e)
 				continue
 			}
 			slog.Debug("like post: %s (%s) %s", p.Item.Title, pid, p.User.Nickname)
@@ -152,7 +152,7 @@ post:
 		if record.PostShare < PostShare {
 			e := skland.SharePost(gameId, account.Skland)
 			if e != nil {
-				slog.Error("share post error: %w", e)
+				slog.Error("share post error: %v", e)
 				continue
 			}
 			record.PostShare++

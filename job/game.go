@@ -59,7 +59,7 @@ func SignGameByApp(apps []*skland.PlayersByApp, account config.Account) (SignGam
 			record, err := SignGamePlayer(app, player, account)
 			slog.Info("sign game record: %+v", record)
 			if err != nil {
-				slog.Error("sign game error: %w", err)
+				slog.Error("sign game error: %v", err)
 				continue
 			}
 			records = append(records, record)
