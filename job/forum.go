@@ -18,7 +18,7 @@ const (
 	PostView  = 5
 	PostLike  = 10
 	PostShare = 1
-	PostLoop  = 10
+	PostLoop  = 3
 )
 
 type SignForumRecord struct {
@@ -68,9 +68,9 @@ func SignForumGames(games []*skland.GameData, account config.Account) (SignForum
 	var records []SignForumRecord
 	for _, game := range games {
 		record, err := SignForumGame(game, account)
-		slog.Info("sign game record: %+v", record)
+		slog.Info("sign forum record: %+v", record)
 		if err != nil {
-			slog.Error("sign game error: %v", err)
+			slog.Error("sign forum error: %v", err)
 			continue
 		}
 		records = append(records, record)
