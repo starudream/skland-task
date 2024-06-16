@@ -139,6 +139,7 @@ post:
 				continue
 			}
 			record.PostView++
+			time.Sleep(100 * time.Millisecond)
 		}
 		if record.PostLike < PostLike && !p.IsLiked() {
 			e := skland.ActionPost(pid, skland.ActionLike, false, account.Skland)
@@ -148,6 +149,7 @@ post:
 			}
 			slog.Debug("like post: %s (%s) %s", p.Item.Title, pid, p.User.Nickname)
 			record.PostLike++
+			time.Sleep(100 * time.Millisecond)
 		}
 		if record.PostShare < PostShare {
 			e := skland.SharePost(gameId, account.Skland)
@@ -156,8 +158,8 @@ post:
 				continue
 			}
 			record.PostShare++
+			time.Sleep(100 * time.Millisecond)
 		}
-		// avoid too fast
 		time.Sleep(500 * time.Millisecond)
 	}
 
