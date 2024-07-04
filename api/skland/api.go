@@ -24,11 +24,12 @@ const (
 	VName     = "1.5.1"
 	DId       = "743a446c83032899"
 
-	GameCodeArknights = "1"   // 明日方舟
-	GameCodeExastris  = "2"   // 来自星尘
-	GameCodeEndfleld  = "3"   // 终末地
-	GameCodePopucom   = "4"   // 泡姆泡姆
-	GameCodeNest      = "100" // 纳斯特港
+	GameIdArknights = "1"   // 明日方舟
+	GameIdExastris  = "2"   // 来自星尘
+	GameIdEndfleld  = "3"   // 明日方舟：终末地
+	GameIdPopucom   = "4"   // 泡姆泡姆
+	GameIdNest      = "100" // 纳斯特港
+	GameIdOpenup    = "101" // 开拓芯
 
 	GameAppCodeArknights = "arknights"
 
@@ -54,6 +55,9 @@ func (t *BaseResp[T]) IsSuccess() bool {
 }
 
 func (t *BaseResp[T]) String() string {
+	if t == nil || t.Code == nil {
+		return "<nil>"
+	}
 	return fmt.Sprintf("code: %d, message: %s", *t.Code, t.Message)
 }
 

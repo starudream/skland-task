@@ -9,7 +9,7 @@ import (
 )
 
 func TestSignForum(t *testing.T) {
-	err := SignForum(GameCodeArknights, config.C().FirstAccount().Skland)
+	err := SignForum(GameIdArknights, config.C().FirstAccount().Skland)
 	if IsMessage(err, MessageForumHasSigned) {
 		t.SkipNow()
 	}

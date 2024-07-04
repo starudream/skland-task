@@ -12,8 +12,8 @@ import (
 	"github.com/starudream/skland-task/config"
 )
 
-var SignGameCodeByAppCode = map[string]string{
-	skland.GameAppCodeArknights: skland.GameCodeArknights,
+var SignGameIdByAppCode = map[string]string{
+	skland.GameAppCodeArknights: skland.GameIdArknights,
 }
 
 type SignGameRecord struct {
@@ -80,7 +80,7 @@ func SignGamePlayer(app *skland.PlayersByApp, player *skland.Player, account con
 	record.PlayerUid = player.Uid
 	record.PlayerChannel = player.ChannelName
 
-	gameId := SignGameCodeByAppCode[app.AppCode]
+	gameId := SignGameIdByAppCode[app.AppCode]
 	if gameId == "" {
 		err = fmt.Errorf("game code %s not supported", app.AppCode)
 		return

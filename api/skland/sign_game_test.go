@@ -9,7 +9,7 @@ import (
 )
 
 func TestSignGame(t *testing.T) {
-	data, err := SignGame(GameCodeArknights, PlayerUid, config.C().FirstAccount().Skland)
+	data, err := SignGame(GameIdArknights, PlayerUid, config.C().FirstAccount().Skland)
 	if IsMessage(err, MessageGameHasSigned) {
 		t.SkipNow()
 	}
@@ -17,6 +17,6 @@ func TestSignGame(t *testing.T) {
 }
 
 func TestListSignGame(t *testing.T) {
-	data, err := ListSignGame(GameCodeArknights, PlayerUid, config.C().FirstAccount().Skland)
+	data, err := ListSignGame(GameIdArknights, PlayerUid, config.C().FirstAccount().Skland)
 	testutil.LogNoErr(t, err, data, data.Records.Today().ShortString(data.ResourceInfoMap))
 }

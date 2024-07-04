@@ -9,7 +9,7 @@ import (
 )
 
 func TestListPost(t *testing.T) {
-	data, err := ListPost(GameCodeArknights, "2", "", config.C().FirstAccount().Skland)
+	data, err := ListPost(GameIdArknights, "2", "", config.C().FirstAccount().Skland)
 	testutil.LogNoErr(t, err, data)
 }
 
@@ -24,6 +24,6 @@ func TestActionPost(t *testing.T) {
 }
 
 func TestSharePost(t *testing.T) {
-	err := SharePost(GameCodeArknights, config.C().FirstAccount().Skland)
+	err := SharePost(GameIdArknights, config.C().FirstAccount().Skland)
 	testutil.LogNoErr(t, err)
 }

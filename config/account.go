@@ -13,6 +13,8 @@ type Account struct {
 	Phone      string            `json:"phone"      yaml:"phone"`
 	Hypergryph AccountHypergryph `json:"hypergryph" yaml:"hypergryph"`
 	Skland     AccountSkland     `json:"skland"     yaml:"skland"`
+
+	SignForumIds []string `json:"sign_forum_ids" yaml:"sign_forum_ids" table:",ignore"`
 }
 
 type AccountHypergryph struct {

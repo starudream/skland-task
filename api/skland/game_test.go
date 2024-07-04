@@ -19,6 +19,6 @@ func TestListPlayer(t *testing.T) {
 }
 
 func TestSwitchPlayer(t *testing.T) {
-	err := SwitchPlayer(GameCodeArknights, PlayerUid, config.C().FirstAccount().Skland)
+	err := SwitchPlayer(GameIdArknights, PlayerUid, config.C().FirstAccount().Skland)
 	testutil.LogNoErr(t, err)
 }
