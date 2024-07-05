@@ -68,7 +68,7 @@ func SignForumGames(games []*skland.GameData, account config.Account) (SignForum
 	var records []SignForumRecord
 	for _, game := range games {
 		if len(account.SignForumIds) > 0 && !slices.Contains(account.SignForumIds, strconv.Itoa(game.Game.GameId)) {
-			slog.Warn("forum id %s not in sign forum ids", game.Game.GameId)
+			slog.Warn("forum id %d not in sign forum ids", game.Game.GameId)
 			continue
 		}
 		record, err := SignForumGame(game, account)
