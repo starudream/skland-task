@@ -29,7 +29,7 @@ func RefreshToken(account config.Account) (config.Account, error) {
 			return account, fmt.Errorf("get user error: %w", err)
 		}
 
-		account, err = Login(account.Hypergryph.Token)
+		account, err = Login(account)
 		if err != nil {
 			return account, err
 		}
@@ -44,15 +44,12 @@ func RefreshToken(account config.Account) (config.Account, error) {
 	return account, nil
 }
 
-func Login(hypergryphToken string) (config.Account, error) {
-	account := config.Account{}
-
-	if hypergryphToken == "" {
+func Login(account config.Account) (config.Account, error) {
+	if account.Hypergryph.Token == "" {
 		return account, fmt.Errorf("hypergryph token is empty")
 	}
-	account.Hypergryph.Token = hypergryphToken
 
-	res1, err := hypergryph.GrantApp(hypergryphToken, hypergryph.AppCodeSKLAND)
+	res1, err := hypergryph.GrantApp(account.Hypergryph.Token, hypergryph.AppCodeSKLAND)
 	if err != nil {
 		return account, fmt.Errorf("grant app error: %w", err)
 	}

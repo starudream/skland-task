@@ -52,8 +52,8 @@ func (rs SignForumRecords) Success() string {
 	return strings.Join(vs, "\n")
 }
 
-func SignForum(account config.Account) (SignForumRecords, error) {
-	account, err := RefreshToken(account)
+func SignForum(account config.Account) (_ SignForumRecords, err error) {
+	account, err = RefreshToken(account)
 	if err != nil {
 		return nil, err
 	}

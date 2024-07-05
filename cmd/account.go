@@ -42,13 +42,12 @@ var (
 				return fmt.Errorf("login by phone code error: %w", err)
 			}
 
-			account, err := job.Login(res.Token)
+			account := config.Account{Phone: phone, Hypergryph: config.AccountHypergryph{Token: res.Token}}
+
+			account, err = job.Login(account)
 			if err != nil {
 				return err
 			}
-
-			account.Phone = phone
-			account.Hypergryph.Token = res.Token
 
 			config.AddAccount(account)
 			return config.Save()
