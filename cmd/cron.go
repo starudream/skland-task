@@ -40,7 +40,7 @@ func cronRun() error {
 
 func cronJob() {
 	for i := 0; i < len(config.C().Accounts); i++ {
-		cronForumAccount(config.C().Accounts[i])
+		// cronForumAccount(config.C().Accounts[i])
 		cronGameAccount(config.C().Accounts[i])
 	}
 }

@@ -9,12 +9,12 @@ import (
 )
 
 func RefreshToken(account config.Account) (config.Account, error) {
-	_, err := skland.GetUser(account.Skland)
+	_, err := skland.ListPlayer(account.Skland)
 	if err == nil {
 		return account, nil
 	}
 	if !skland.IsUnauthorized(err) {
-		return account, fmt.Errorf("get user error: %w", err)
+		return account, fmt.Errorf("list player error: %w", err)
 	}
 
 	res, err := skland.AuthRefresh(account.Skland.Cred)
@@ -23,10 +23,10 @@ func RefreshToken(account config.Account) (config.Account, error) {
 	}
 	account.Skland.Token = res.Token
 
-	_, err = skland.GetUser(account.Skland)
+	_, err = skland.ListPlayer(account.Skland)
 	if err != nil {
 		if !skland.IsUnauthorized(err) {
-			return account, fmt.Errorf("get user error: %w", err)
+			return account, fmt.Errorf("list player error: %w", err)
 		}
 
 		account, err = Login(account)
