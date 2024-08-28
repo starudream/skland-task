@@ -10,8 +10,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-viper/mapstructure/v2"
+
 	"github.com/starudream/go-lib/core/v2/codec/json"
-	"github.com/starudream/go-lib/core/v2/utils/structutil"
+	"github.com/starudream/go-lib/core/v2/utils/osutil"
 	"github.com/starudream/go-lib/resty/v2"
 
 	"github.com/starudream/skland-task/config"
@@ -140,13 +142,17 @@ func sign(headers signHeaders, method, path, token string, query url.Values, bod
 }
 
 func tom(s any) map[string]string {
-	t := structutil.New(s)
-	t.TagName = "json"
-	m := map[string]string{}
-	for k, v := range t.Map() {
-		m[k] = v.(string)
+	out := map[string]string{}
+	cfg := &mapstructure.DecoderConfig{
+		Squash:  true,
+		Result:  &out,
+		TagName: "json",
 	}
-	return m
+	decoder, err := mapstructure.NewDecoder(cfg)
+	osutil.PanicErr(err)
+	err = decoder.Decode(s)
+	osutil.PanicErr(err)
+	return out
 }
 
 func hmac256(key, content string) []byte {
